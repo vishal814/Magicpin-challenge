@@ -23,6 +23,10 @@ contexts: dict[tuple[str, str], dict] = {}    # (scope, context_id) -> {version,
 conversations: dict[str, list] = {}           # conversation_id -> [turns]
 
 
+@app.get("/")
+async def root():
+    return {"message": "magicpin Vera Bot is running! The judge API is located at /v1/"}
+
 @app.get("/v1/healthz")
 async def healthz():
     counts = {"category": 0, "merchant": 0, "customer": 0, "trigger": 0}
