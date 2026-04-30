@@ -39,7 +39,7 @@ LLM_MODEL = ""  # <-- Optional: specify model or leave empty for default
 OLLAMA_URL = "http://localhost:11434"
 
 # Which test to run by default
-TEST_SCENARIO = "all"
+TEST_SCENARIO = "full_evaluation"
 
 # =============================================================================
 # ██████  END OF CONFIGURATION - DON'T EDIT BELOW THIS LINE ██████
@@ -50,6 +50,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 import sys
+sys.stdout.reconfigure(encoding='utf-8')
 import json
 import time
 import re
