@@ -187,7 +187,7 @@ Schema:
 }
 
 Rules for deciding action:
-1. AUTO-REPLY DETECTION: If the user repeats the exact same canned corporate message, or says they are an automated assistant, return "action": "end".
+1. AUTO-REPLY DETECTION: If the user sends a canned corporate auto-reply for the first time, return "action": "wait" with wait_seconds 14400. If they repeat it multiple times, return "action": "end".
 2. INTENT TRANSITION: If they say "yes", "let's do it", "go ahead" - immediately switch from pitching to ACTION mode (e.g. "Done! I have updated it."). Do not qualify further.
 3. HOSTILE: If they say "stop spamming", "not interested", apologize briefly in body and return "action": "end" or just "end".
 4. WAIT: If they ask for time ("ask me tomorrow"), return "action": "wait".
