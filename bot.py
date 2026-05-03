@@ -107,7 +107,7 @@ Rules:
 2. CATEGORY FIT: Match the tone of the business. (e.g. Dentists = clinical peer, Salons = warm).
 3. MERCHANT FIT: Personalize to this specific merchant's data, offers, and language preference. Mix Hindi-English if their language preference allows it.
 4. TRIGGER RELEVANCE: Clearly communicate "why now" using the trigger data.
-5. SINGLE CTA: Only one clear action, preferably a binary YES/STOP choice.
+5. TIGHT CTA: Your message must end with a strict, single binary choice (e.g., "Reply YES to activate or STOP to opt out"). Do not offer open-ended choices. Set the "cta" JSON field to "YES/STOP".
 6. URLs: Allowed only if they add clear value.
 7. NO HALLUCINATION: Only use facts from the context.
 8. RESTRAINT: If the trigger is irrelevant, or the merchant is hostile/over-messaged, choose "skip".
@@ -152,7 +152,6 @@ Rules:
     tasks = [process_trigger(tid) for tid in body.available_triggers]
     results = await asyncio.gather(*tasks)
     actions = [res for res in results if res is not None]
-    
     return {"actions": actions}
 
 
@@ -187,11 +186,13 @@ Schema:
 }
 
 Rules for deciding action:
-1. AUTO-REPLY DETECTION: If the user sends a canned corporate auto-reply for the first time, return "action": "wait" with wait_seconds 14400. If they repeat it multiple times, return "action": "end".
+1. AUTO-REPLY DETECTION: If the user sends a canned corporate auto-reply (e.g., "Thank you for contacting us", "Our team will respond shortly", "automated assistant"), immediately return "action": "end". Do not wait.
 2. INTENT TRANSITION: If they say "yes", "let's do it", "go ahead" - immediately switch from pitching to ACTION mode (e.g. "Done! I have updated it."). Do not qualify further.
-3. HOSTILE: If they say "stop spamming", "not interested", apologize briefly in body and return "action": "end" or just "end".
-4. WAIT: If they ask for time ("ask me tomorrow"), return "action": "wait".
-5. Otherwise, return "action": "send" with a helpful response that matches their tone and language preference.
+3. HOSTILE: If they say "stop spamming", "not interested", apologize briefly in body and return "action": "end".
+4. DIRECT ANSWERS: If the merchant asks a question, answer it directly and specifically using only facts from the context. Do not ignore their question to continue pitching.
+5. WAIT: If they ask for time ("ask me tomorrow"), return "action": "wait".
+6. TIGHT CTA: If you are sending a message, it must end with a tight, binary choice (e.g. "Reply YES or NO"). Set the "cta" JSON field to "YES/STOP".
+7. Otherwise, return "action": "send" with a helpful response that matches their tone and language preference.
 """
 
     context_str = f"Category: {json.dumps(category)}\nMerchant: {json.dumps(merchant)}\nCustomer: {json.dumps(customer)}\n"
